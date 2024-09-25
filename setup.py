@@ -1,3 +1,4 @@
+"""Script to install exam paper downloader."""
 from setuptools import setup, find_packages
 
 # Read the contents of your README file
@@ -10,7 +11,7 @@ setup(
     description='A script to download A-Level test papers and mark schemes from xtremepape.rs.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/fam007e/fun007/',
+    url='https://github.com/fam007e/OandALvl-exam-paper-downloader',
     author='Faisal Ahmed Moshiur',
     author_email='faisalmoshiur+gitpy@gmail.com',
     license='MIT',

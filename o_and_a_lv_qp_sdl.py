@@ -46,7 +46,7 @@ def get_subjects(exam_board, exam_level):
         url = f'{BASE_URL}index.php?dirpath=./CAIE/{exam_level}/&order=0'
     else:  # Edexcel
         url = f'{BASE_URL}index.php?dirpath=./Edexcel/{exam_level}/&order=0'
-    
+
     response = requests.get(url, timeout=10)
     soup = BeautifulSoup(response.text, 'html.parser')
     subject_links = soup.find_all('a', class_='directory')
@@ -161,7 +161,11 @@ def main():
         print(f"\nProcessing {subject}...")
 
         pdfs = get_pdfs(subject_url, exam_board)
-        subject_dir = os.path.join(exam_board, exam_level.replace('+', ' '), subject.replace('/', '_').replace('&', 'and'))
+        subject_dir = os.path.join(
+            exam_board,
+            exam_level.replace('+', ' '),
+            subject.replace('/', '_').replace('&', 'and')
+        )
         os.makedirs(subject_dir, exist_ok=True)
 
         for filename, pdf_url in pdfs.items():
