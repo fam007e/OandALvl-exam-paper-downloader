@@ -28,7 +28,7 @@ pip install requests beautifulsoup4
 3. Download the script using curl:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/fam007e/fun007/master/OandALevelsXtremepapersDownloader/OandALvLQPSDL.py -o OandALvLQPSDL.py
+curl -fsSL https://raw.githubusercontent.com/fam007e/OandALvl-exam-paper-downloader/refs/heads/main/o_and_a_lv_qp_sdl.py -o o_and_a_lv_qp_sdl.py
 ```
 
 ## Usage
