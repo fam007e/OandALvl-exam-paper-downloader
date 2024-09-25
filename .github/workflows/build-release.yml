@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - OandALvLQPSDL.py
+      - o_and_a_lv_qp_sdl.py
 
 jobs:
   release:
