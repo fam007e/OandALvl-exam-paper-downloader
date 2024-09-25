@@ -27,8 +27,8 @@ jobs:
 
     - name: Build binary
       run: |
-        pyinstaller --onefile --name O-ALvL-paper-downloader_win.exe OandALvLQPSDL.py
-        pyinstaller --onefile --name O-ALvL-paper-downloader_linux OandALvLQPSDL.py
+        pyinstaller --onefile --name O-ALvL-paper-downloader_win.exe o_and_a_lv_qp_sdl.py
+        pyinstaller --onefile --name O-ALvL-paper-downloader_linux o_and_a_lv_qp_sdl.py
         chmod +x dist/*
 
     - name: Set up GitHub CLI
