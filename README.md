@@ -36,7 +36,7 @@ curl -fsSL https://raw.githubusercontent.com/fam007e/OandALvl-exam-paper-downloa
 1. Run the script:
 
 ```bash
-python OandALvLQPSDL.py
+python o_and_a_lv_qp_sdl.py
 ```
 
 2. Follow the on-screen prompts:
