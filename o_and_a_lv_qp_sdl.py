@@ -1,5 +1,5 @@
 """
-This script downloads exam papers and mark schemes from the xtremepapers website
+This script downloads exam papers and mark schemes from the xtremepapers' website
 for CAIE and Edexcel boards and organizes them into directories based on the 
 exam board and subject.
 """
