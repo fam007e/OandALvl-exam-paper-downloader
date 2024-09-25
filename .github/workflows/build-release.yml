@@ -1,0 +1,53 @@
+name: Release Binary
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - OandALvLQPSDL.py
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build binary
+      run: |
+        pyinstaller --onefile --name O-ALvL-paper-downloader_win.exe OandALvLQPSDL.py
+        pyinstaller --onefile --name O-ALvL-paper-downloader_linux OandALvLQPSDL.py
+        chmod +x dist/*
+
+    - name: Set up GitHub CLI
+      run: |
+        sudo apt-get install -y gh
+
+    - name: Authenticate GitHub CLI
+      run: |
+        echo "${{ secrets.XM_PAPER_TOKEN }}" | gh auth login --with-token
+
+    - name: Create release
+      id: create_release
+      run: |
+        version=$(date +'%Y.%m.%d')".$(git rev-list --count HEAD)"
+        changelog=$(git log --oneline --pretty=format:"* %s (%h)" | head -n 20)
+        echo "Changelog: $changelog" > dist/changelog.txt
+        
+        gh release create "v${version}" dist/O-ALvL-paper-downloader_win.exe dist/O-ALvL-paper-downloader_linux dist/changelog.txt --title "Release v${version}" --notes "$changelog"
+
+    - name: Clean up binaries
+      run: |
+        rm dist/O-ALvL-paper-downloader_win.exe dist/O-ALvL-paper-downloader_linux
