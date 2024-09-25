@@ -52,7 +52,7 @@ Please be respectful of the Xtremepapers website and avoid overloading their ser
 
 ## License
 
-This project is open source and available under the [LICENSE](../LICENSE).
+This project is open source and available under the [LICENSE](LICENSE).
 
 ## Contributing
 
