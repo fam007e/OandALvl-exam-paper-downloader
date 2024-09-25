@@ -1,10 +1,14 @@
+"""
+This script downloads exam papers and mark schemes from the xtremepapers website
+for CAIE and Edexcel boards and organizes them into directories based on the 
+exam board and subject.
+"""
 import os
 import re
 import requests
 from bs4 import BeautifulSoup
 
 BASE_URL = 'https://papers.xtremepape.rs/'
-
 
 def get_exam_board():
     """Prompt user to choose the examination board."""
@@ -19,7 +23,6 @@ def get_exam_board():
             return 'Edexcel'
         else:
             print("Invalid choice. Please enter 1 or 2.")
-
 
 def get_exam_level(exam_board):
     """Prompt user to choose the examination level based on the selected board."""
@@ -39,7 +42,6 @@ def get_exam_level(exam_board):
         else:
             print("Invalid choice. Please enter 1 or 2.")
 
-
 def get_subjects(exam_board, exam_level):
     """Fetch subjects for the selected exam board and level."""
     if exam_board == 'CAIE':
@@ -47,10 +49,10 @@ def get_subjects(exam_board, exam_level):
     else:  # Edexcel
         url = f'{BASE_URL}index.php?dirpath=./Edexcel/{exam_level}/&order=0'
     
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     soup = BeautifulSoup(response.text, 'html.parser')
     subject_links = soup.find_all('a', class_='directory')
-    
+
     subjects = {}
     for link in subject_links:
         subject_name = link.text.strip('[]')
@@ -58,10 +60,9 @@ def get_subjects(exam_board, exam_level):
             subjects[subject_name] = BASE_URL + link['href']
     return subjects
 
-
 def get_pdfs(subject_url, exam_board):
     """Fetch PDF links for the selected subject."""
-    response = requests.get(subject_url)
+    response = requests.get(subject_url, timeout=10)
     soup = BeautifulSoup(response.text, 'html.parser')
 
     if exam_board == 'Edexcel':
@@ -70,18 +71,17 @@ def get_pdfs(subject_url, exam_board):
     pdf_links = soup.find_all('a', class_='file', href=re.compile(r'\.pdf$'))
     return {link.text.strip(): BASE_URL + link['href'] for link in pdf_links}
 
-
 def get_edexcel_pdfs(subject_url):
     """Fetch PDF links for Edexcel subjects."""
     pdfs = {}
-    response = requests.get(subject_url)
+    response = requests.get(subject_url, timeout=10)
     soup = BeautifulSoup(response.text, 'html.parser')
     year_links = soup.find_all('a', class_='directory')
 
     for year_link in year_links:
         if year_link.text.strip('[]') != '..':
             year_url = BASE_URL + year_link['href']
-            year_response = requests.get(year_url)
+            year_response = requests.get(year_url, timeout=10)
             year_soup = BeautifulSoup(year_response.text, 'html.parser')
 
             qp_link = year_soup.find('a', class_='directory', text='[Question-paper]')
@@ -99,32 +99,17 @@ def get_edexcel_pdfs(subject_url):
 
     return pdfs
 
-
 def get_pdfs_from_page(url):
     """Fetch all PDF links from a specific page."""
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     soup = BeautifulSoup(response.text, 'html.parser')
     pdf_links = soup.find_all('a', class_='file', href=re.compile(r'\.pdf$'))
     return {link.text.strip(): BASE_URL + link['href'] for link in pdf_links}
 
-
 def download_pdf(url, filename, subject_dir, exam_board):
     """Download a PDF and save it in the appropriate directory."""
-    response = requests.get(url)
-    if exam_board == 'CAIE':
-        if '_ms_' in filename:
-            subdir = 'ms'
-        elif '_qp_' in filename:
-            subdir = 'qp'
-        else:
-            subdir = 'misc'
-    else:  # Edexcel
-        if 'question' in filename.lower():
-            subdir = 'qp'
-        elif 'mark' in filename.lower() or 'ms' in filename.lower():
-            subdir = 'ms'
-        else:
-            subdir = 'misc'
+    response = requests.get(url, timeout=10)
+    subdir = categorize_pdf(filename, exam_board)
 
     dir_path = os.path.join(subject_dir, subdir)
     os.makedirs(dir_path, exist_ok=True)
@@ -134,6 +119,22 @@ def download_pdf(url, filename, subject_dir, exam_board):
         f.write(response.content)
     print(f"Downloaded: {filename}")
 
+def categorize_pdf(filename, exam_board):
+    """Categorize the PDF as question paper, mark scheme, or miscellaneous."""
+    if exam_board == 'CAIE':
+        if '_ms_' in filename:
+            return 'ms'
+        elif '_qp_' in filename:
+            return 'qp'
+        else:
+            return 'misc'
+    else:  # Edexcel
+        if 'question' in filename.lower():
+            return 'qp'
+        elif 'mark' in filename.lower() or 'ms' in filename.lower():
+            return 'ms'
+        else:
+            return 'misc'
 
 def print_subjects_in_columns(subjects):
     """Print the available subjects in multiple columns."""
@@ -142,9 +143,8 @@ def print_subjects_in_columns(subjects):
     num_columns = max(1, terminal_width // (max_width + 2))
     subject_list = [f"{i}. {subject}" for i, subject in enumerate(subjects, 1)]
     for i in range(0, len(subject_list), num_columns):
-        row = subject_list[i:i+num_columns]
+        row = subject_list[i:i + num_columns]
         print("  ".join(item.ljust(max_width) for item in row))
-
 
 def main():
     """Main function to run the script."""
@@ -170,7 +170,6 @@ def main():
 
         for filename, pdf_url in pdfs.items():
             download_pdf(pdf_url, filename, subject_dir, exam_board)
-
 
 if __name__ == "__main__":
     main()
