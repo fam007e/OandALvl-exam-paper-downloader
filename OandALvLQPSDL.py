@@ -19,10 +19,9 @@ def get_exam_board():
         choice = input("Enter your choice (1 or 2): ").strip()
         if choice == '1':
             return 'CAIE'
-        elif choice == '2':
+        if choice == '2':
             return 'Edexcel'
-        else:
-            print("Invalid choice. Please enter 1 or 2.")
+        print("Invalid choice. Please enter 1 or 2.")
 
 def get_exam_level(exam_board):
     """Prompt user to choose the examination level based on the selected board."""
@@ -37,10 +36,9 @@ def get_exam_level(exam_board):
         choice = input("Enter your choice (1 or 2): ").strip()
         if choice == '1':
             return 'O+Level' if exam_board == 'CAIE' else 'International+GCSE'
-        elif choice == '2':
+        if choice == '2':
             return 'AS+and+A+Level' if exam_board == 'CAIE' else 'Advanced+Level'
-        else:
-            print("Invalid choice. Please enter 1 or 2.")
+        print("Invalid choice. Please enter 1 or 2.")
 
 def get_subjects(exam_board, exam_level):
     """Fetch subjects for the selected exam board and level."""
@@ -124,17 +122,15 @@ def categorize_pdf(filename, exam_board):
     if exam_board == 'CAIE':
         if '_ms_' in filename:
             return 'ms'
-        elif '_qp_' in filename:
+        if '_qp_' in filename:
             return 'qp'
-        else:
-            return 'misc'
-    else:  # Edexcel
-        if 'question' in filename.lower():
-            return 'qp'
-        elif 'mark' in filename.lower() or 'ms' in filename.lower():
-            return 'ms'
-        else:
-            return 'misc'
+        return 'misc'
+    # Edexcel
+    if 'question' in filename.lower():
+        return 'qp'
+    if 'mark' in filename.lower() or 'ms' in filename.lower():
+        return 'ms'
+    return 'misc'
 
 def print_subjects_in_columns(subjects):
     """Print the available subjects in multiple columns."""
