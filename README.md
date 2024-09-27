@@ -58,6 +58,3 @@ This project is open source and available under the [LICENSE](LICENSE).
 
 Contributions, issues, and feature requests are welcome. Feel free to check [issues page](https://github.com/fam007e/OandALvl-exam-paper-downloader/issues) if you want to contribute.
 
-## Author
-
-[fam007e](https://github.com/fam007e)
